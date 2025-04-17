@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1744833617 source:/home/heslo-odin/Documents/c++/test-physics/main.cpp
+1744883192 source:/home/heslo-odin/Documents/c++/test-physics/main.cpp
 	<iostream>
 	<SFML/Graphics.hpp>
 	<cmath>
@@ -524,13 +524,13 @@
 
 1744742643 /home/heslo-odin/Documents/c++/test-physics/headers/Constants.h
 
-1744829780 /home/heslo-odin/Documents/c++/test-physics/headers/Objects.h
+1744882959 /home/heslo-odin/Documents/c++/test-physics/headers/Objects.h
 
 1744743290 /home/heslo-odin/Documents/c++/test-physics/headers/Random.h
 	<chrono>
 	<random>
 
-1744833704 /home/heslo-odin/Documents/c++/test-physics/headers/ConstantsAndVariables.h
+1744881430 /home/heslo-odin/Documents/c++/test-physics/headers/ConstantsAndVariables.h
 
 1744833363 /home/heslo-odin/Documents/c++/test-physics/headers/Functions.h
 

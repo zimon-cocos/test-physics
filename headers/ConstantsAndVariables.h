@@ -5,6 +5,7 @@ uint16_t height {600};
 int fps {60};
 float timeSpeed {1};
 float dtSinceSpawn {0};
+float boxId {0};
 
 
 //physics

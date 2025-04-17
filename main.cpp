@@ -11,20 +11,18 @@
 int main()
 
 {
-    int score {};
     sf::RenderWindow window (sf::VideoMode({width,height}),"Tutorial");
     window.setFramerateLimit(fps);
-
-
-    sf::CircleShape circle(30.0f);
-    circle.setOrigin(circle.getGeometricCenter());
-    circle.setPosition({300.0f,300.0f});
-
 
     std::vector<Box> boxes;
 
     sf::Clock clock;
     float dt {0};
+
+    sf::RectangleShape floor;
+    floor.setSize({600.0f,30.0f});
+    floor.setPosition({0.0f,550.0f});
+    floor.setFillColor(sf::Color::Red);
 
     while(window.isOpen())
         {
@@ -56,48 +54,75 @@ int main()
                 auto transMousePos = window.mapPixelToCoords(mousePos);
                 if(dtSinceSpawn>0.2)
                 {
-                    boxes.emplace_back(transMousePos.x,transMousePos.y,20.0f);
+                    boxes.emplace_back(transMousePos.x,transMousePos.y,30.0f);
+                    boxes.back().boxId = boxId;
+                    ++boxId;
                     boxes.back().terminalV = getTerminalVelocity(boxes.back());
                     std::cout << "Terminal velocity of object is " << boxes.back().terminalV << '\n';
+                    std::cout << "Id is " << boxes.back().boxId << '\n';
                     dtSinceSpawn = 0;
                 }
 
             }
 
-        circle.setFillColor(sf::Color::Green);
-        if(boxes.size()>0)
+        for(auto& boxi : boxes)
         {
-            if(boxes.back().velocity<boxes.back().terminalV)
+            if(!boxi.onFloor)
             {
-                boxes.back().velocity = getFallVelocity(boxes.back(),dt);
+                if(floor.getGlobalBounds().findIntersection(boxi.shape.getGlobalBounds()))
+                {
+                    boxi.terminalV = 0;
+                    boxi.velocity = 0;
+                    boxi.onFloor = true;
+                }
 
+
+                if(boxi.velocity<boxi.terminalV)
+                {
+                    boxi.velocity = getFallVelocity(boxi,dt);
+                }
+                boxi.shape.move({0.0f,1.0f*boxi.velocity});
             }
-            std::cout << "The velocity of the box is: " << boxes.back().velocity << '\n';
-
-            boxes.back().shape.move({0.0f,1.0f*boxes.back().velocity});
         }
 
 
 
+        for(int i {0}; i<boxes.size();++i)
+            {
+                for(int j {0}; j<boxes.size();++j)
+                {
+
+                    if(boxes[i].shape.getGlobalBounds().findIntersection(boxes[j].shape.getGlobalBounds()) && boxes[i].boxId != boxes[j].boxId)
+                    {
+                        if(boxes[i].onFloor || boxes[j].onFloor)
+                        {
+                            boxes[i].terminalV = 0;
+                            boxes[i].velocity = 0;
+                            boxes[j].terminalV = 0;
+                            boxes[j].velocity = 0;
+
+                            boxes[i].onFloor = true;
+                            boxes[j].onFloor = true;
 
 
+                            boxes[i].isStatic = true;
+                            boxes[j].isStatic = true;
+
+
+                        }
+                    }
+                }
+            }
 
         //Render
         window.clear(sf::Color::White);
 
         //DRAWING
-        //window->draw(sprite);
         clock.restart();
-        window.draw(circle);
-        for(int i {0}; i<boxes.size();++i)
-            {
-                window.draw(boxes[i].shape);
-            }
+        for(auto& box : boxes) window.draw(box.shape);
+        window.draw(floor);
         window.display();
     }
-
-    //delete window;
-
 }
 
 
